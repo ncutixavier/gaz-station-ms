@@ -9,9 +9,10 @@ const shiftUpdateSchema = z.object({
   endTime: z.string().regex(/^\d{2}:\d{2}:\d{2}$/).optional() 
 })
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const id = Number(params.id)
+    const { id: idParam } = await params
+    const id = Number(idParam)
     if (!id) return badRequest('Invalid ID')
     
     const body = await req.json()
@@ -30,9 +31,10 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const id = Number(params.id)
+    const { id: idParam } = await params
+    const id = Number(idParam)
     if (!id) return badRequest('Invalid ID')
     
     await prisma.shift.delete({ where: { id } })
