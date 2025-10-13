@@ -1,0 +1,165 @@
+{
+  "info": {
+    "name": "Gaz Station MS - API v1",
+    "_postman_id": "5b6a5f1a-3c2d-4d0a-9c1e-11aa0c9f9d00",
+    "description": "Postman collection for Gaz Station backend (Next.js API routes). GET endpoints return paginated data with hasNext/hasPrev.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000/api/v1" }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Pagination response format:",
+          "// {",
+          "//   \"data\": [...],",
+          "//   \"page\": 1,",
+          "//   \"pageSize\": 20,",
+          "//   \"total\": 100,",
+          "//   \"totalPages\": 5,",
+          "//   \"hasNext\": true,",
+          "//   \"hasPrev\": false",
+          "// }"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "products",
+      "item": [
+        {
+          "name": "GET /products?page=1&pageSize=20",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products?page=1&pageSize=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "POST /products",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Essence\",\n  \"unitPrice\": 1.25\n}"
+            },
+            "url": "{{baseUrl}}/products"
+          }
+        },
+        {
+          "name": "PATCH /products/:id",
+          "request": {
+            "method": "PATCH",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Essence SP\",\n  \"unitPrice\": 1.30\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /products/:id",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/products/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "blocks",
+      "item": [
+        { "name": "GET /blocks?page=1&pageSize=20", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/blocks?page=1&pageSize=20", "host": ["{{baseUrl}}"], "path": ["blocks"], "query": [ { "key": "page", "value": "1" }, { "key": "pageSize", "value": "20" } ] } } },
+        { "name": "POST /blocks", "request": { "method": "POST", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Block 1\"\n}" }, "url": "{{baseUrl}}/blocks" } },
+        { "name": "PATCH /blocks/:id", "request": { "method": "PATCH", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Block A\"\n}" }, "url": { "raw": "{{baseUrl}}/blocks/1", "host": ["{{baseUrl}}"], "path": ["blocks", "1"] } } },
+        { "name": "DELETE /blocks/:id", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/blocks/1", "host": ["{{baseUrl}}"], "path": ["blocks", "1"] } } }
+      ]
+    },
+    {
+      "name": "cashiers",
+      "item": [
+        { "name": "GET /cashiers?page=1&pageSize=20", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/cashiers?page=1&pageSize=20", "host": ["{{baseUrl}}"], "path": ["cashiers"], "query": [ { "key": "page", "value": "1" }, { "key": "pageSize", "value": "20" } ] } } },
+        { "name": "POST /cashiers", "request": { "method": "POST", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Alice Doe\",\n  \"email\": \"alice@example.com\",\n  \"phone\": \"+243000000\"\n}" }, "url": "{{baseUrl}}/cashiers" } },
+        { "name": "PATCH /cashiers/:id", "request": { "method": "PATCH", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Alice D\",\n  \"email\": \"alice.d@example.com\",\n  \"phone\": \"+243111111\"\n}" }, "url": { "raw": "{{baseUrl}}/cashiers/1", "host": ["{{baseUrl}}"], "path": ["cashiers", "1"] } } },
+        { "name": "DELETE /cashiers/:id", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/cashiers/1", "host": ["{{baseUrl}}"], "path": ["cashiers", "1"] } } }
+      ]
+    },
+    {
+      "name": "shifts",
+      "item": [
+        { "name": "GET /shifts?page=1&pageSize=20", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/shifts?page=1&pageSize=20", "host": ["{{baseUrl}}"], "path": ["shifts"], "query": [ { "key": "page", "value": "1" }, { "key": "pageSize", "value": "20" } ] } } },
+        { "name": "POST /shifts", "request": { "method": "POST", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Morning\",\n  \"startTime\": \"06:00:00\",\n  \"endTime\": \"14:00:00\"\n}" }, "url": "{{baseUrl}}/shifts" } },
+        { "name": "PATCH /shifts/:id", "request": { "method": "PATCH", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Morning\",\n  \"startTime\": \"07:00:00\",\n  \"endTime\": \"15:00:00\"\n}" }, "url": { "raw": "{{baseUrl}}/shifts/1", "host": ["{{baseUrl}}"], "path": ["shifts", "1"] } } },
+        { "name": "DELETE /shifts/:id", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/shifts/1", "host": ["{{baseUrl}}"], "path": ["shifts", "1"] } } }
+      ]
+    },
+    {
+      "name": "block-shifts",
+      "item": [
+        { "name": "GET /block-shifts?page=1&pageSize=20", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/block-shifts?page=1&pageSize=20", "host": ["{{baseUrl}}"], "path": ["block-shifts"], "query": [ { "key": "page", "value": "1" }, { "key": "pageSize", "value": "20" } ] } } },
+        { "name": "GET /block-shifts?date=YYYY-MM-DD", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/block-shifts?date=2025-10-13", "host": ["{{baseUrl}}"], "path": ["block-shifts"], "query": [ { "key": "date", "value": "2025-10-13" } ] } } },
+        { "name": "POST /block-shifts", "request": { "method": "POST", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"blockId\": 1,\n  \"shiftId\": 1,\n  \"cashierId\": 1,\n  \"date\": \"2025-10-13\"\n}" }, "url": "{{baseUrl}}/block-shifts" } },
+        { "name": "PATCH /block-shifts/:id", "request": { "method": "PATCH", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"blockId\": 1,\n  \"shiftId\": 2,\n  \"cashierId\": 1,\n  \"date\": \"2025-10-13\"\n}" }, "url": { "raw": "{{baseUrl}}/block-shifts/1", "host": ["{{baseUrl}}"], "path": ["block-shifts", "1"] } } },
+        { "name": "DELETE /block-shifts/:id", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/block-shifts/1", "host": ["{{baseUrl}}"], "path": ["block-shifts", "1"] } } }
+      ]
+    },
+    {
+      "name": "readings",
+      "item": [
+        { "name": "GET /readings?page=1&pageSize=20", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/readings?page=1&pageSize=20", "host": ["{{baseUrl}}"], "path": ["readings"], "query": [ { "key": "page", "value": "1" }, { "key": "pageSize", "value": "20" } ] } } },
+        { "name": "GET /readings?blockShiftId=1", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/readings?blockShiftId=1", "host": ["{{baseUrl}}"], "path": ["readings"], "query": [ { "key": "blockShiftId", "value": "1" } ] } } },
+        { "name": "POST /readings", "request": { "method": "POST", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"blockShiftId\": 1,\n  \"productId\": 1,\n  \"startIndex\": 1000.0,\n  \"endIndex\": 900.0\n}" }, "url": "{{baseUrl}}/readings" } },
+        { "name": "PATCH /readings/:id", "request": { "method": "PATCH", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"startIndex\": 950.0,\n  \"endIndex\": 900.0\n}" }, "url": { "raw": "{{baseUrl}}/readings/1", "host": ["{{baseUrl}}"], "path": ["readings", "1"] } } },
+        { "name": "DELETE /readings/:id", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/readings/1", "host": ["{{baseUrl}}"], "path": ["readings", "1"] } } }
+      ]
+    },
+    {
+      "name": "stock",
+      "item": [
+        { "name": "GET /stock?page=1&pageSize=20", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/stock?page=1&pageSize=20", "host": ["{{baseUrl}}"], "path": ["stock"], "query": [ { "key": "page", "value": "1" }, { "key": "pageSize", "value": "20" } ] } } },
+        { "name": "POST /stock (upsert)", "request": { "method": "POST", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"productId\": 1,\n  \"quantity\": 5000.0\n}" }, "url": "{{baseUrl}}/stock" } },
+        { "name": "PATCH /stock/:id", "request": { "method": "PATCH", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"quantity\": 4800.0\n}" }, "url": { "raw": "{{baseUrl}}/stock/1", "host": ["{{baseUrl}}"], "path": ["stock", "1"] } } },
+        { "name": "DELETE /stock/:id", "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/stock/1", "host": ["{{baseUrl}}"], "path": ["stock", "1"] } } }
+      ]
+    },
+    {
+      "name": "sales",
+      "item": [
+        { "name": "GET /sales?page=1&pageSize=20", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/sales?page=1&pageSize=20", "host": ["{{baseUrl}}"], "path": ["sales"], "query": [ { "key": "page", "value": "1" }, { "key": "pageSize", "value": "20" } ] } } },
+        { "name": "GET /sales?date=YYYY-MM-DD&page=1&pageSize=20", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/sales?date=2025-10-13&page=1&pageSize=20", "host": ["{{baseUrl}}"], "path": ["sales"], "query": [ { "key": "date", "value": "2025-10-13" }, { "key": "page", "value": "1" }, { "key": "pageSize", "value": "20" } ] } } },
+        { "name": "POST /sales (compute for blockShift)", "request": { "method": "POST", "header": [ { "key": "Content-Type", "value": "application/json" } ], "body": { "mode": "raw", "raw": "{\n  \"blockShiftId\": 1,\n  \"date\": \"2025-10-13\"\n}" }, "url": "{{baseUrl}}/sales" } }
+      ]
+    },
+    {
+      "name": "reports/daily",
+      "item": [
+        { "name": "GET /reports/daily", "request": { "method": "GET", "url": "{{baseUrl}}/reports/daily" } },
+        { "name": "GET /reports/daily?date=YYYY-MM-DD", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/reports/daily?date=2025-10-13", "host": ["{{baseUrl}}"], "path": ["reports", "daily"], "query": [ { "key": "date", "value": "2025-10-13" } ] } } }
+      ]
+    }
+  ]
+}
+
+
