@@ -1,0 +1,121 @@
+// Datasource and generator
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Models
+model Product {
+  id         Int       @id @default(autoincrement())
+  name       String    @unique
+  unitPrice  Decimal
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  stock      Stock?
+  indexes    Index[]
+  sales      Sale[]
+}
+
+model Block {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  blockShifts BlockShift[]
+}
+
+model Cashier {
+  id         Int          @id @default(autoincrement())
+  name       String
+  email      String?      @unique
+  phone      String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  blockShifts BlockShift[]
+}
+
+model Shift {
+  id         Int          @id @default(autoincrement())
+  name       String       @unique
+  startTime  DateTime
+  endTime    DateTime
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  blockShifts BlockShift[]
+}
+
+model BlockShift {
+  id         Int       @id @default(autoincrement())
+  block      Block     @relation(fields: [blockId], references: [id])
+  blockId    Int
+  shift      Shift     @relation(fields: [shiftId], references: [id])
+  shiftId    Int
+  cashier    Cashier   @relation(fields: [cashierId], references: [id])
+  cashierId  Int
+  date       DateTime
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  indexes    Index[]
+  sales      Sale[]
+
+  @@unique([blockId, shiftId, cashierId, date])
+}
+
+model Index {
+  id            Int        @id @default(autoincrement())
+  blockShift    BlockShift @relation(fields: [blockShiftId], references: [id])
+  blockShiftId  Int
+  product       Product    @relation(fields: [productId], references: [id])
+  productId     Int
+  startIndex    Decimal
+  endIndex      Decimal
+  createdAt     DateTime   @default(now())
+
+  @@unique([blockShiftId, productId])
+}
+
+model Stock {
+  id         Int      @id @default(autoincrement())
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  Int      @unique
+  quantity   Decimal
+  updatedAt  DateTime @updatedAt
+}
+
+model Sale {
+  id            Int        @id @default(autoincrement())
+  blockShift    BlockShift @relation(fields: [blockShiftId], references: [id])
+  blockShiftId  Int
+  product       Product    @relation(fields: [productId], references: [id])
+  productId     Int
+  litresSold    Decimal
+  revenue       Decimal
+  date          DateTime
+  createdAt     DateTime   @default(now())
+
+  @@index([date])
+  @@index([blockShiftId])
+  @@index([productId])
+}
+
+model Report {
+  id            Int      @id @default(autoincrement())
+  reportDate    DateTime @unique
+  totalEssence  Decimal
+  totalMazout   Decimal
+  totalRevenue  Decimal
+  createdAt     DateTime @default(now())
+}
+
+// Decimal fields are annotated per-field with @db.Decimal(18, 3)
+
+
