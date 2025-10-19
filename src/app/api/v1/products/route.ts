@@ -18,7 +18,10 @@ export async function GET(req: NextRequest) {
   }
 }
 
-const productCreateSchema = z.object({ name: z.string().min(1), unitPrice: z.number() })
+const productCreateSchema = z.object({ 
+  name: z.string().min(1), 
+  description: z.string().optional() 
+})
 
 export async function POST(req: NextRequest) {
   try {

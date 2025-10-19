@@ -10,7 +10,22 @@ export async function GET(req: NextRequest) {
     const where = blockShiftId ? { blockShiftId: Number(blockShiftId) } : {}
     const { skip, take, page, pageSize } = getPagination(searchParams)
     const [items, total] = await Promise.all([
-      prisma.index.findMany({ where, include: { product: true, blockShift: true }, orderBy: [{ blockShiftId: 'asc' }, { productId: 'asc' }], skip, take }),
+      prisma.index.findMany({ 
+        where, 
+        include: { 
+          product: true, 
+          blockShift: { 
+            include: { 
+              block: true, 
+              shift: true, 
+              cashier: true 
+            } 
+          } 
+        }, 
+        orderBy: [{ blockShiftId: 'asc' }, { productId: 'asc' }], 
+        skip, 
+        take 
+      }),
       prisma.index.count({ where }),
     ])
     const pagination = getPaginationMeta(page, pageSize, total)

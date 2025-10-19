@@ -4,9 +4,9 @@ import { z } from 'zod'
 import { badRequest, serverError } from '@/lib/http'
 
 const blockShiftUpdateSchema = z.object({ 
-  blockId: z.number().optional(), 
-  shiftId: z.number().optional(), 
-  cashierId: z.number().optional(), 
+  blockId: z.number().min(1).optional(), 
+  shiftId: z.number().min(1).optional(), 
+  cashierId: z.number().min(1).optional(), 
   date: z.string().optional() 
 })
 
@@ -26,7 +26,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     
     const updated = await prisma.blockShift.update({ where: { id }, data })
     return Response.json(updated)
-  } catch (e) {
+  } catch (e: any) {
+    // Handle unique constraint violation
+    if (e.code === 'P2002') {
+      return badRequest('A block shift with this combination of block, shift, cashier, and date already exists')
+    }
+    console.error('Error updating block shift:', e)
     return serverError()
   }
 }

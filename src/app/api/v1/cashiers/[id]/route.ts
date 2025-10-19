@@ -6,7 +6,7 @@ import { badRequest, serverError } from '@/lib/http'
 const cashierUpdateSchema = z.object({ 
   name: z.string().min(1).optional(), 
   email: z.string().email().optional(), 
-  phone: z.string().optional() 
+  phone: z.string().optional()
 })
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

@@ -1,4 +1,3 @@
-// Datasource and generator
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,99 +7,110 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Models
 model Product {
-  id         Int       @id @default(autoincrement())
-  name       String    @unique
-  unitPrice  Decimal
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-
-  stock      Stock?
-  indexes    Index[]
-  sales      Sale[]
+  id           Int           @id @default(autoincrement())
+  name         String        @unique
+  description  String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  indexes      Index[]
+  prices       Price?
+  sales        Sale[]
+  stock        Stock?
+  stockRecords StockRecord[]
 }
 
 model Block {
-  id         Int          @id @default(autoincrement())
-  name       String       @unique
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   blockShifts BlockShift[]
 }
 
 model Cashier {
-  id         Int          @id @default(autoincrement())
-  name       String
-  email      String?      @unique
-  phone      String?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-
+  id          Int          @id @default(autoincrement())
+  name        String
+  email       String?      @unique
+  phone       String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   blockShifts BlockShift[]
 }
 
 model Shift {
-  id         Int          @id @default(autoincrement())
-  name       String       @unique
-  startTime  DateTime
-  endTime    DateTime
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  startTime   DateTime
+  endTime     DateTime
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   blockShifts BlockShift[]
 }
 
 model BlockShift {
-  id         Int       @id @default(autoincrement())
-  block      Block     @relation(fields: [blockId], references: [id])
-  blockId    Int
-  shift      Shift     @relation(fields: [shiftId], references: [id])
-  shiftId    Int
-  cashier    Cashier   @relation(fields: [cashierId], references: [id])
-  cashierId  Int
-  date       DateTime
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-
-  indexes    Index[]
-  sales      Sale[]
+  id        Int      @id @default(autoincrement())
+  blockId   Int
+  shiftId   Int
+  cashierId Int
+  date      DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cashier   Cashier  @relation(fields: [cashierId], references: [id])
+  shift     Shift    @relation(fields: [shiftId], references: [id])
+  block     Block    @relation(fields: [blockId], references: [id])
+  indexes   Index[]
+  sales     Sale[]
 
   @@unique([blockId, shiftId, cashierId, date])
 }
 
 model Index {
-  id            Int        @id @default(autoincrement())
-  blockShift    BlockShift @relation(fields: [blockShiftId], references: [id])
-  blockShiftId  Int
-  product       Product    @relation(fields: [productId], references: [id])
-  productId     Int
-  startIndex    Decimal
-  endIndex      Decimal
-  createdAt     DateTime   @default(now())
+  id           Int        @id @default(autoincrement())
+  blockShiftId Int
+  productId    Int
+  startIndex   Decimal
+  endIndex     Decimal
+  createdAt    DateTime   @default(now())
+  product      Product    @relation(fields: [productId], references: [id])
+  blockShift   BlockShift @relation(fields: [blockShiftId], references: [id])
 
   @@unique([blockShiftId, productId])
 }
 
 model Stock {
+  id        Int      @id @default(autoincrement())
+  productId Int      @unique
+  quantity  Decimal
+  updatedAt DateTime @updatedAt
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+model StockRecord {
   id         Int      @id @default(autoincrement())
-  product    Product  @relation(fields: [productId], references: [id])
-  productId  Int      @unique
+  productId  Int
   quantity   Decimal
+  recordDate DateTime
+  notes      String?
+  createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  product    Product  @relation(fields: [productId], references: [id])
+
+  @@unique([productId, recordDate])
+  @@index([productId, recordDate])
+  @@index([recordDate])
 }
 
 model Sale {
-  id            Int        @id @default(autoincrement())
-  blockShift    BlockShift @relation(fields: [blockShiftId], references: [id])
-  blockShiftId  Int
-  product       Product    @relation(fields: [productId], references: [id])
-  productId     Int
-  litresSold    Decimal
-  revenue       Decimal
-  date          DateTime
-  createdAt     DateTime   @default(now())
+  id           Int        @id @default(autoincrement())
+  blockShiftId Int
+  productId    Int
+  litresSold   Decimal
+  revenue      Decimal
+  date         DateTime
+  createdAt    DateTime   @default(now())
+  product      Product    @relation(fields: [productId], references: [id])
+  blockShift   BlockShift @relation(fields: [blockShiftId], references: [id])
 
   @@index([date])
   @@index([blockShiftId])
@@ -108,14 +118,32 @@ model Sale {
 }
 
 model Report {
-  id            Int      @id @default(autoincrement())
-  reportDate    DateTime @unique
-  totalEssence  Decimal
-  totalMazout   Decimal
-  totalRevenue  Decimal
-  createdAt     DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  reportDate   DateTime @unique
+  totalEssence Decimal
+  totalMazout  Decimal
+  totalRevenue Decimal
+  createdAt    DateTime @default(now())
 }
 
-// Decimal fields are annotated per-field with @db.Decimal(18, 3)
+model Price {
+  id            Int            @id @default(autoincrement())
+  productId     Int            @unique
+  saleUnitPrice Decimal
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  product       Product        @relation(fields: [productId], references: [id])
+  priceHistory  PriceHistory[]
+}
 
+model PriceHistory {
+  id         Int      @id @default(autoincrement())
+  priceId    Int
+  oldPrice   Decimal?
+  newPrice   Decimal
+  changeDate DateTime @default(now())
+  createdAt  DateTime @default(now())
+  price      Price    @relation(fields: [priceId], references: [id])
 
+  @@index([priceId, changeDate])
+}

@@ -4,8 +4,8 @@ import { z } from 'zod'
 import { badRequest, serverError } from '@/lib/http'
 
 const productUpdateSchema = z.object({ 
-  name: z.string().min(1).optional(), 
-  unitPrice: z.number().optional() 
+  name: z.string().min(1).optional(),
+  description: z.string().optional()
 })
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
