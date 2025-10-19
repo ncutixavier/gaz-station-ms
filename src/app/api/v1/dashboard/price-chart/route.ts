@@ -5,8 +5,8 @@ import { serverError } from '@/lib/http'
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
-    const month = searchParams.get('month') || new Date().getMonth() + 1
-    const year = searchParams.get('year') || new Date().getFullYear()
+    const month = parseInt(searchParams.get('month') || String(new Date().getMonth() + 1))
+    const year = parseInt(searchParams.get('year') || String(new Date().getFullYear()))
     
     // Calculate start and end of the month
     const startDate = new Date(year, month - 1, 1)
@@ -88,6 +88,7 @@ export async function GET(req: NextRequest) {
     
     // Create datasets for each product
     const datasets = Object.entries(chartData).map(([productName, data], index) => {
+      const productData = data as Record<string, number>
       const colors = [
         'rgb(239, 68, 68)',  // red
         'rgb(16, 185, 129)', // emerald
@@ -98,7 +99,7 @@ export async function GET(req: NextRequest) {
         'rgb(34, 197, 94)',  // green
       ]
       
-      const dataPoints = labels.map(date => data[date] || null)
+      const dataPoints = labels.map(date => productData[date] || null)
       
       return {
         label: productName,

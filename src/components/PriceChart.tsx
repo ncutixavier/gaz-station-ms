@@ -134,7 +134,7 @@ export function PriceChart({ month, year }: PriceChartProps) {
           padding: 20,
           font: {
             size: 12,
-            weight: '500' as const
+            weight: 'bold' as const
           }
         }
       },

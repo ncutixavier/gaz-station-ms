@@ -33,7 +33,13 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) return badRequest(parsed.error.message)
     const indexes = await prisma.index.findMany({
       where: { blockShiftId: parsed.data.blockShiftId },
-      include: { product: true },
+      include: { 
+        product: {
+          include: {
+            prices: true
+          }
+        }
+      },
     })
     const date = new Date(parsed.data.date)
     const created = await prisma.$transaction(async (tx) => {
@@ -41,7 +47,7 @@ export async function POST(req: NextRequest) {
       const rows = [] as any[]
       for (const idx of indexes) {
         const litresSold = computeLitresSold(idx.startIndex, idx.endIndex)
-        const revenue = litresSold * Number(idx.product.unitPrice)
+        const revenue = litresSold * Number(idx.product.prices?.saleUnitPrice || 0)
         const row = await tx.sale.create({ data: { blockShiftId: parsed.data.blockShiftId, productId: idx.productId, litresSold, revenue, date } })
         rows.push(row)
       }

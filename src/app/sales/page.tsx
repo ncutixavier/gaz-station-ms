@@ -249,6 +249,7 @@ export default function SalesPage() {
         data={sales}
         columns={columns}
         pagination={pagination}
+        loading={loading}
         onPageChange={(page) => fetchSales(page, pagination.pageSize)}
         onEdit={undefined} // Sales are read-only
         onDelete={undefined} // Sales are read-only

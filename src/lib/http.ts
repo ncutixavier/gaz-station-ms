@@ -21,4 +21,8 @@ export function serverError(message = 'Internal Server Error') {
   return Response.json({ error: message }, { status: 500 })
 }
 
+export function notFound(message = 'Not Found') {
+  return Response.json({ error: message }, { status: 404 })
+}
+
 

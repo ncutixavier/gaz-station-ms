@@ -134,7 +134,7 @@ export function StockChart({ month, year }: StockChartProps) {
           padding: 20,
           font: {
             size: 12,
-            weight: '500' as const
+            weight: 'bold' as const
           }
         }
       },

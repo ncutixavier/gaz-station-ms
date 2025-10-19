@@ -51,14 +51,14 @@ export async function PATCH(
 
     // Validate endIndex against existing startIndex if only endIndex is being updated
     if (validatedData.endIndex !== undefined && validatedData.startIndex === undefined) {
-      if (validatedData.endIndex >= existingIndex.startIndex) {
+      if (validatedData.endIndex >= Number(existingIndex.startIndex)) {
         return badRequest('End index must be lower than start index')
       }
     }
 
     // Validate startIndex against existing endIndex if only startIndex is being updated
     if (validatedData.startIndex !== undefined && validatedData.endIndex === undefined) {
-      if (validatedData.startIndex <= existingIndex.endIndex) {
+      if (validatedData.startIndex <= Number(existingIndex.endIndex)) {
         return badRequest('Start index must be higher than end index')
       }
     }
